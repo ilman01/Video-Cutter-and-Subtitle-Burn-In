@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Video Cutter and Subtitle Burn In", "Video Cutter and Subtitle Burn In.csproj", "{7BA86A38-BA6E-47B4-AF82-ECD8CECC7952}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BA86A38-BA6E-47B4-AF82-ECD8CECC7952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BA86A38-BA6E-47B4-AF82-ECD8CECC7952}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BA86A38-BA6E-47B4-AF82-ECD8CECC7952}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BA86A38-BA6E-47B4-AF82-ECD8CECC7952}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9F53E324-B146-42E8-9732-7A95183FBFDC}
+	EndGlobalSection
+EndGlobal

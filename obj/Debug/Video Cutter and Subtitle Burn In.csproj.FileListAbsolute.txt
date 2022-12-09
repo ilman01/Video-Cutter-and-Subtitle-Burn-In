@@ -1,0 +1,16 @@
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\bin\Debug\Video Cutter and Subtitle Burn In.exe.config
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\bin\Debug\Video Cutter and Subtitle Burn In.exe
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\bin\Debug\Video Cutter and Subtitle Burn In.pdb
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.csproj.AssemblyReference.cache
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.csproj.SuggestedBindingRedirects.cache
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video_Cutter_and_Subtitle_Burn_In.Form1.resources
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video_Cutter_and_Subtitle_Burn_In.Properties.Resources.resources
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.csproj.GenerateResource.cache
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.csproj.CoreCompileInputs.cache
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.exe
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.pdb
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\bin\Debug\Interop.WMPLib.dll
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\bin\Debug\AxInterop.WMPLib.dll
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Interop.WMPLib.dll
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\AxInterop.WMPLib.dll
+E:\VS PROJECTS\Video Cutter and Subtitle Burn In\obj\Debug\Video Cutter and Subtitle Burn In.csproj.ResolveComReference.cache
