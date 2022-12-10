@@ -185,7 +185,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             }
 
             backgroundWorker1.RunWorkerAsync();
-            
+
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -223,8 +223,8 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             Control.CheckForIllegalCrossThreadCalls = false;
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = false;
+            process.StartInfo.RedirectStandardOutput = false;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.CreateNoWindow = true;
 
@@ -240,10 +240,10 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             process.StandardInput.Flush();
             process.StandardInput.Close();
 
-            string output = process.StandardOutput.ReadToEnd();
-            string error = process.StandardError.ReadToEnd();
-            Console.WriteLine(output);
-            Console.WriteLine(error);
+            //string output = process.StandardOutput.ReadToEnd();
+            //string error = process.StandardError.ReadToEnd();
+            //Console.WriteLine(output);
+            //Console.WriteLine(error);
             process.WaitForExit();
 
             Process process2 = new Process();
@@ -268,6 +268,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
             progressBar1.Value = 100;
             label6.Text = "Done!";
+
             currentlyProcessing = false;
             /*StreamReader streamReader = process.StandardError;
             while (!streamReader.EndOfStream)
