@@ -25,6 +25,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         {
             backgroundWorker1.WorkerReportsProgress = true;
             label6.Text = "Ready";
+            System.IO.Directory.CreateDirectory(Application.StartupPath + "/ffmpeg");
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
