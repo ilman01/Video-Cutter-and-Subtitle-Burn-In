@@ -24,6 +24,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         private void Form1_Load(object sender, EventArgs e)
         {
             backgroundWorker1.WorkerReportsProgress = true;
+            label6.Text = "Ready";
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -164,6 +165,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         private void button1_Click(object sender, EventArgs e)
         {
             backgroundWorker1.RunWorkerAsync();
+            
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -171,32 +173,79 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             StartConvert();
             progressBar1.Minimum = 0;
             progressBar1.Maximum = 100;
-            for (var i = 0; i <= progressBar1.Maximum; i++)
-            {
-                backgroundWorker1.ReportProgress(i);
-            }
         }
 
-        public void StartConvert()
+        public async void StartConvert()
         {
+            string inputFile = "\"" + textBox1.Text + "\"";
+            string outputFile = "\"" + textBox2.Text + "\"";
+            string quality = textBox6.Text;
+            string gain = textBox7.Text;
+            string startTime = textBox4.Text;
+            string endTime = textBox5.Text;
+
+            string argExtractSub = "-y " + "-i " + inputFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
+            string argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light'\" " + outputFile;
+
             Process process = new Process();
             Control.CheckForIllegalCrossThreadCalls = false;
-            string arguements = "-y " + "-i " + "\"" + textBox1.Text + "\"" + " " + "\"" + textBox2.Text + "\"";
-            process.StartInfo.FileName = Application.StartupPath + "/ffmpeg/ffmpeg.exe";
-            process.StartInfo.Arguments = arguements;
+            process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.CreateNoWindow = true;
+
             process.Start();
-            StreamReader streamReader = process.StandardError;
+
+            progressBar1.Value = 0;
+            process.StandardInput.WriteLine("cd ffmpeg");
+            label6.Text = "Processing... Please Wait.";
+            
+            progressBar1.Value = 25;
+            process.StandardInput.WriteLine("ffmpeg.exe " + argExtractSub);
+
+            process.StandardInput.Flush();
+            process.StandardInput.Close();
+
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+            Console.WriteLine(output);
+            Console.WriteLine(error);
+            process.WaitForExit();
+
+            Process process2 = new Process();
+            process2.StartInfo.FileName = "cmd.exe";
+            process2.StartInfo.UseShellExecute = false;
+            process2.StartInfo.RedirectStandardError = false;
+            process2.StartInfo.RedirectStandardOutput = false;
+            process2.StartInfo.RedirectStandardInput = true;
+            process2.StartInfo.CreateNoWindow = true;
+
+
+            progressBar1.Value = 50;
+
+            process2.Start();
+            process2.StandardInput.WriteLine("cd ffmpeg");
+            process2.StandardInput.WriteLine("ffmpeg.exe " + argVideoProc);
+
+            process2.StandardInput.Flush();
+            process2.StandardInput.Close();
+
+            process2.WaitForExit();
+
+            progressBar1.Value = 100;
+            label6.Text = "Done!";
+
+            /*StreamReader streamReader = process.StandardError;
             while (!streamReader.EndOfStream)
             {
                 getTotalSecondProcessed(streamReader.ReadLine());
-            }
+            }*/
 
         }
 
-        private void getTotalSecondProcessed(string line)
+        /*private void getTotalSecondProcessed(string line)
         {
             try
             {
@@ -214,11 +263,11 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             {
 
             }
-        }
+        }*/
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar1.Value = e.ProgressPercentage;
+            
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
