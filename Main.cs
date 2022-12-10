@@ -342,5 +342,14 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             }
         }
 
+        private void button9_Click(object sender, EventArgs e)
+        {
+            textBox4.Text = "00:00";
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            textBox5.Text = axWindowsMediaPlayer1.currentMedia.durationString;
+        }
     }
 }
