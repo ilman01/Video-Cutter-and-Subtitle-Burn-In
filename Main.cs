@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualBasic;
+using System.Net;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Video_Cutter_and_Subtitle_Burn_In
 {
@@ -165,6 +167,12 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (File.Exists("./ffmpeg/ffmpeg.exe")) { }
+            else
+            {
+                MessageBox.Show("FFmpeg not detected");
+                return;
+            }
             backgroundWorker1.RunWorkerAsync();
             
         }
@@ -275,5 +283,40 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         {
             
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (File.Exists("./ffmpeg/ffmpeg.exe"))
+            {
+                MessageBox.Show("FFmpeg already downloaded.");
+            }
+            else
+            {
+                /*using (var client = new WebClient())
+                {
+                    client.DownloadFile("https://github.com/ilman01/Video-Cutter-and-Subtitle-Burn-In/raw/main/ffmpeg.exe", "./ffmpeg/ffmpeg.exe");
+                }*/
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    wc.DownloadFileAsync(
+                        // Param1 = Link of file
+                        new System.Uri("https://github.com/ilman01/Video-Cutter-and-Subtitle-Burn-In/raw/main/ffmpeg.exe"),
+                        // Param2 = Path to save
+                        "./ffmpeg/ffmpeg.exe"
+                    );
+                }
+            }
+        }
+        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            label6.Text = "Downloading FFmpeg: " + e.ProgressPercentage.ToString() + "%";
+
+            if (e.ProgressPercentage == 100)
+            {
+                label6.Text = "Ready";
+            }
+        }
+
     }
 }
