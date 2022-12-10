@@ -349,7 +349,14 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
         private void button10_Click(object sender, EventArgs e)
         {
-            textBox5.Text = axWindowsMediaPlayer1.currentMedia.durationString;
+            try
+            {
+                textBox5.Text = axWindowsMediaPlayer1.currentMedia.durationString;
+            }
+            catch
+            {
+                MessageBox.Show("Please load a video first.");
+            }
         }
     }
 }
