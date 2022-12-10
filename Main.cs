@@ -15,6 +15,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 {
     public partial class Form1 : Form
     {
+        public double Progress { get; set; }
         public Form1()
         {
             InitializeComponent();
@@ -184,18 +185,18 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             process.StartInfo.FileName = Application.StartupPath + "/ffmpeg/ffmpeg.exe";
             process.StartInfo.Arguments = arguements;
             process.StartInfo.UseShellExecute = false;
-            //process.StartInfo.RedirectStandardError = true;
-            //process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = true;
             process.Start();
-            /*StreamReader streamReader = process.StandardError;
+            StreamReader streamReader = process.StandardError;
             while (!streamReader.EndOfStream)
             {
                 getTotalSecondProcessed(streamReader.ReadLine());
-            }*/
+            }
 
         }
 
-        /*private void getTotalSecondProcessed(string line)
+        private void getTotalSecondProcessed(string line)
         {
             try
             {
@@ -205,7 +206,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                     if (row.StartsWith("time="))
                     {
                         var time = row.Split('=');
-                        //Progress = TimeSpan.Parse(time[1]).TotalSeconds;
+                        Progress = TimeSpan.Parse(time[1]).TotalSeconds;
                     }
                 }
             }
@@ -213,7 +214,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             {
 
             }
-        }*/
+        }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
