@@ -18,6 +18,9 @@ namespace Video_Cutter_and_Subtitle_Burn_In
     public partial class Form1 : Form
     {
         public double Progress { get; set; }
+        
+        bool currentlyProcessing;
+        
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +31,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             backgroundWorker1.WorkerReportsProgress = true;
             label6.Text = "Ready";
             System.IO.Directory.CreateDirectory(Application.StartupPath + "/ffmpeg");
+            currentlyProcessing = false;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -173,6 +177,13 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 MessageBox.Show("FFmpeg not detected");
                 return;
             }
+
+            if (currentlyProcessing == true)
+            {
+                MessageBox.Show("Please wait for the current one to finish.");
+                return;
+            }
+
             backgroundWorker1.RunWorkerAsync();
             
         }
@@ -186,14 +197,26 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
         public async void StartConvert()
         {
+            currentlyProcessing = true; 
+            
             string inputFile = "\"" + textBox1.Text + "\"";
             string outputFile = "\"" + textBox2.Text + "\"";
+            string inputSubtitleFile = "\"" + textBox3.Text + "\"";
             string quality = textBox6.Text;
             string gain = textBox7.Text;
             string startTime = textBox4.Text;
             string endTime = textBox5.Text;
 
-            string argExtractSub = "-y " + "-i " + inputFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
+            string argExtractSub = null;
+            if (checkBox1.Checked == true)
+            {
+                argExtractSub = "-y " + "-i " + inputSubtitleFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
+            }
+            else
+            {
+                argExtractSub = "-y " + "-i " + inputFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
+            }
+
             string argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light'\" " + outputFile;
 
             Process process = new Process();
@@ -245,7 +268,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
             progressBar1.Value = 100;
             label6.Text = "Done!";
-
+            currentlyProcessing = false;
             /*StreamReader streamReader = process.StandardError;
             while (!streamReader.EndOfStream)
             {
