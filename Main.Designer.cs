@@ -419,6 +419,7 @@
             this.MinimumSize = new System.Drawing.Size(674, 598);
             this.Name = "Form1";
             this.Text = "Video Cutter and Subtitle Burn In";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.ResumeLayout(false);

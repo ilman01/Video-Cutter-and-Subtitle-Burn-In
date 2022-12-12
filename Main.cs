@@ -32,6 +32,56 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             label6.Text = "Ready";
             System.IO.Directory.CreateDirectory(Application.StartupPath + "/ffmpeg");
             currentlyProcessing = false;
+
+            if (File.Exists("config"))
+            {
+                try
+                {
+                    loadConfig();
+                }
+                catch
+                {
+                    MessageBox.Show("Config file load failed. State not loaded.");
+                    File.Delete("config");
+                    string preData = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                    File.WriteAllText("config", preData);
+                }
+            }
+            else
+            {
+                string preData = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                File.WriteAllText("config",preData);
+            }
+        }
+
+        public void loadConfig()
+        {
+            string fileInput = File.ReadLines("config").Take(1).First();
+            string fileOutput = File.ReadLines("config").Skip(1).Take(1).First();
+            string fileSubtitleInput = File.ReadLines("config").Skip(2).Take(1).First();
+            string startTime = File.ReadLines("config").Skip(3).Take(1).First();
+            string endTime = File.ReadLines("config").Skip(4).Take(1).First();
+            string seperateSub = File.ReadLines("config").Skip(5).Take(1).First();
+            string quality = File.ReadLines("config").Skip(6).Take(1).First();
+            string gain = File.ReadLines("config").Skip(7).Take(1).First();
+
+            textBox1.Text = fileInput;
+            textBox2.Text = fileOutput;
+            textBox3.Text = fileSubtitleInput;
+            textBox4.Text = startTime;
+            textBox5.Text = endTime;
+            if (seperateSub == "True")
+            {
+                checkBox1.Checked = true;
+            }
+            textBox6.Text = quality;
+            textBox7.Text = gain;
+
+            if (fileInput != "")
+            {
+                axWindowsMediaPlayer1.URL = textBox1.Text;
+                axWindowsMediaPlayer1.Ctlcontrols.stop();
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -184,6 +234,17 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 return;
             }
 
+            if (textBox1.Text == ""
+                || textBox2.Text == ""
+                || textBox4.Text == ""
+                || textBox5.Text == ""
+                || textBox6.Text == ""
+                || textBox7.Text == "")
+            {
+                MessageBox.Show("Please fill in the parameters.");
+                return;
+            }
+
             backgroundWorker1.RunWorkerAsync();
 
         }
@@ -320,6 +381,8 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 {
                     client.DownloadFile("https://github.com/ilman01/Video-Cutter-and-Subtitle-Burn-In/raw/main/ffmpeg.exe", "./ffmpeg/ffmpeg.exe");
                 }*/
+                MessageBox.Show("FFmpeg download started.");
+                label6.Text = "FFmpeg download starting...";
                 using (WebClient wc = new WebClient())
                 {
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
@@ -357,6 +420,43 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             {
                 MessageBox.Show("Please load a video first.");
             }
+        }
+
+        static void lineChanger(string newText, string fileName, int line_to_edit)
+        {
+            string[] arrLine = File.ReadAllLines(fileName);
+            arrLine[line_to_edit - 1] = newText;
+            File.WriteAllLines(fileName, arrLine);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string fileInput = textBox1.Text;
+            string fileOutput = textBox2.Text;
+            string fileSubtitleInput = textBox3.Text;
+            string startTime = textBox4.Text;
+            string endTime = textBox5.Text;
+            string seperateSub = checkBox1.Checked.ToString();
+            string quality = textBox6.Text;
+            string gain = textBox7.Text;
+
+            try
+            {
+                lineChanger(fileInput, "config", 1);
+                lineChanger(fileOutput, "config", 2);
+                lineChanger(fileSubtitleInput, "config", 3);
+                lineChanger(startTime, "config", 4);
+                lineChanger(endTime, "config", 5);
+                lineChanger(seperateSub, "config", 6);
+                lineChanger(quality, "config", 7);
+                lineChanger(gain, "config", 8);
+            }
+            catch
+            {
+                MessageBox.Show("Config file save failed. State not saved.");
+                File.Delete("config");
+            }
+            
         }
     }
 }
