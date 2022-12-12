@@ -2,7 +2,8 @@
 A video cutter and subtitle burn in program. From one of my batch files, I made it a UI for it.
 
 ## Preview
-![preview](https://user-images.githubusercontent.com/106542354/206852835-899a7a09-af3d-4046-b455-57472156136c.png)
-![preview2](https://user-images.githubusercontent.com/106542354/206852839-4adbb1fb-614c-4ffd-8ab2-ed67a6633f80.png)
+![preview1-nbg](https://user-images.githubusercontent.com/106542354/206955084-702d022c-1cca-45bf-bc72-008a1b6dadc2.png)
+![preview2-nbg](https://user-images.githubusercontent.com/106542354/206955118-e9e0e187-8e0f-41b5-bdbc-501b97596598.png)
+
 ## Result
 ![vlcsnap-2022-12-10-18h36m36s315](https://user-images.githubusercontent.com/106542354/206853091-25d78849-7372-41c8-9594-4801b39451c6.png)
