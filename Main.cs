@@ -20,6 +20,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         public double Progress { get; set; }
         
         bool currentlyProcessing;
+        bool currentlyDownloading;
         
         public Form1()
         {
@@ -32,6 +33,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             label6.Text = "Ready";
             System.IO.Directory.CreateDirectory(Application.StartupPath + "/ffmpeg");
             currentlyProcessing = false;
+            currentlyDownloading = false;
 
             if (File.Exists("config"))
             {
@@ -64,6 +66,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string seperateSub = File.ReadLines("config").Skip(5).Take(1).First();
             string quality = File.ReadLines("config").Skip(6).Take(1).First();
             string gain = File.ReadLines("config").Skip(7).Take(1).First();
+            string cutOnly = File.ReadLines("config").Skip(8).Take(1).First();
 
             textBox1.Text = fileInput;
             textBox2.Text = fileOutput;
@@ -76,6 +79,10 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             }
             textBox6.Text = quality;
             textBox7.Text = gain;
+            if (cutOnly == "True")
+            {
+                checkBox2.Checked = true;
+            }
 
             if (fileInput != "")
             {
@@ -224,13 +231,19 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             if (File.Exists("./ffmpeg/ffmpeg.exe")) { }
             else
             {
-                MessageBox.Show("FFmpeg not detected");
+                MessageBox.Show("FFmpeg not detected. Please download FFmpeg.");
                 return;
             }
 
             if (currentlyProcessing == true)
             {
                 MessageBox.Show("Please wait for the current one to finish.");
+                return;
+            }
+
+            if (currentlyDownloading == true)
+            {
+                MessageBox.Show("Please wait for the download to finish.");
                 return;
             }
 
@@ -269,6 +282,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string endTime = textBox5.Text;
 
             string argExtractSub = null;
+            string argVideoProc = null;
             if (checkBox1.Checked == true)
             {
                 argExtractSub = "-y " + "-i " + inputSubtitleFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
@@ -278,7 +292,15 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 argExtractSub = "-y " + "-i " + inputFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
             }
 
-            string argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light'\" " + outputFile;
+            if (checkBox2.Checked == true)
+            {
+                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" " + outputFile;
+            }
+            else
+            {
+                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light'\" " + outputFile;
+            }
+            
 
             Process process = new Process();
             Control.CheckForIllegalCrossThreadCalls = false;
@@ -383,6 +405,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 }*/
                 MessageBox.Show("FFmpeg download started.");
                 label6.Text = "FFmpeg download starting...";
+                currentlyDownloading = true;
                 using (WebClient wc = new WebClient())
                 {
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
@@ -398,10 +421,13 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             label6.Text = "Downloading FFmpeg: " + e.ProgressPercentage.ToString() + "%";
+            progressBar1.Value = e.ProgressPercentage;
 
             if (e.ProgressPercentage == 100)
             {
                 label6.Text = "Ready";
+                currentlyDownloading = false;
+                progressBar1.Value = 0;
             }
         }
 
@@ -439,6 +465,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string seperateSub = checkBox1.Checked.ToString();
             string quality = textBox6.Text;
             string gain = textBox7.Text;
+            string cutOnly = checkBox2.Checked.ToString();
 
             try
             {
@@ -450,6 +477,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 lineChanger(seperateSub, "config", 6);
                 lineChanger(quality, "config", 7);
                 lineChanger(gain, "config", 8);
+                lineChanger(cutOnly, "config", 9);
             }
             catch
             {
@@ -457,6 +485,28 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 File.Delete("config");
             }
             
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string currentTime = textBox4.Text;
+                double seconds = TimeSpan.Parse("00:" + currentTime).TotalSeconds;
+                axWindowsMediaPlayer1.Ctlcontrols.currentPosition = seconds;
+            }
+            catch { MessageBox.Show("Error"); }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string currentTime = textBox5.Text;
+                double seconds = TimeSpan.Parse("00:" + currentTime).TotalSeconds;
+                axWindowsMediaPlayer1.Ctlcontrols.currentPosition = seconds;
+            }
+            catch { MessageBox.Show("Error"); }
         }
     }
 }
