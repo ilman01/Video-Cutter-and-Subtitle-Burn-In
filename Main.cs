@@ -144,7 +144,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         {
             SaveFileDialog saveFile = new SaveFileDialog();
             saveFile.Title = "Select Output File";
-            saveFile.Filter = "All Files|*.*";
+            saveFile.Filter = "MP4 Video|*.mp4";
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
                 string output = saveFile.FileName;
