@@ -18,6 +18,9 @@ namespace Video_Cutter_and_Subtitle_Burn_In
     public partial class Form1 : Form
     {
         public double Progress { get; set; }
+
+        public static string defaultSubtitleStyle { get; set; }
+        public static string subtitleStyle { get; set; }
         
         bool currentlyProcessing;
         bool currentlyDownloading;
@@ -34,6 +37,9 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             System.IO.Directory.CreateDirectory(Application.StartupPath + "/ffmpeg");
             currentlyProcessing = false;
             currentlyDownloading = false;
+
+            defaultSubtitleStyle = "Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light";
+            subtitleStyle = defaultSubtitleStyle;
 
             if (File.Exists("config"))
             {
@@ -305,7 +311,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             }
             else
             {
-                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -map_chapters -1 -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light'\" " + outputFile;
+                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -map_chapters -1 -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='" + subtitleStyle + "'\" " + outputFile;
             }
             
 
@@ -562,6 +568,11 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 axWindowsMediaPlayer1.Ctlcontrols.currentPosition = seconds;
             }
             catch { MessageBox.Show("Error"); }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            new Form2().ShowDialog();
         }
     }
 }
