@@ -67,6 +67,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string quality = File.ReadLines("config").Skip(6).Take(1).First();
             string gain = File.ReadLines("config").Skip(7).Take(1).First();
             string cutOnly = File.ReadLines("config").Skip(8).Take(1).First();
+            string exportSubtitle = File.ReadLines("config").Skip(9).Take(1).First();
 
             textBox1.Text = fileInput;
             textBox2.Text = fileOutput;
@@ -82,6 +83,10 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             if (cutOnly == "True")
             {
                 checkBox2.Checked = true;
+            }
+            if (exportSubtitle == "True")
+            {
+                checkBox3.Checked = true;
             }
 
             if (fileInput != "")
@@ -269,6 +274,8 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             progressBar1.Maximum = 100;
         }
 
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+
         public async void StartConvert()
         {
             currentlyProcessing = true; 
@@ -329,6 +336,9 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             //Console.WriteLine(error);
             process.WaitForExit();
 
+            _stopwatch.Restart();
+            _stopwatch.Start();
+
             Process process2 = new Process();
             process2.StartInfo.FileName = "cmd.exe";
             process2.StartInfo.UseShellExecute = false;
@@ -349,10 +359,32 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
             process2.WaitForExit();
 
+            if (checkBox3.Checked == true)
+            {
+                try
+                {
+                    File.Copy(@"./ffmpeg/subtitle.srt", textBox2.Text + ".srt", true);
+                }
+                catch
+                {
+
+                }
+            }
+
             progressBar1.Value = 100;
             label6.Text = "Done!";
 
             currentlyProcessing = false;
+
+            _stopwatch.Stop();
+            if (_stopwatch.Elapsed.TotalMilliseconds < 90)
+            {
+                label6.Text = "An error has occurred";
+                progressBar1.Value = 0;
+                MessageBox.Show("An error has occurred");
+                //MessageBox.Show(_stopwatch.Elapsed.TotalMilliseconds.ToString());
+            }
+
             /*StreamReader streamReader = process.StandardError;
             while (!streamReader.EndOfStream)
             {
@@ -440,7 +472,26 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         {
             try
             {
-                textBox5.Text = axWindowsMediaPlayer1.currentMedia.durationString;
+                //adds 1 second to the end time
+
+                string oldEndTime = axWindowsMediaPlayer1.currentMedia.durationString;
+                double seconds = TimeSpan.Parse("00:" + oldEndTime).TotalSeconds;
+
+                seconds = seconds + 1;
+
+                if (seconds < 3600)
+                {
+                    TimeSpan time = TimeSpan.FromSeconds(seconds);
+                    string endTime = time.ToString(@"mm\:ss");
+                    textBox5.Text = endTime;
+                }
+                else
+                {
+                    TimeSpan time = TimeSpan.FromSeconds(seconds);
+                    string endTime = time.ToString(@"hh\:mm\:ss");
+                    textBox5.Text = endTime;
+                }
+                
             }
             catch
             {
@@ -466,6 +517,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string quality = textBox6.Text;
             string gain = textBox7.Text;
             string cutOnly = checkBox2.Checked.ToString();
+            string exportSubtitle = checkBox3.Checked.ToString();
 
             try
             {
@@ -478,6 +530,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 lineChanger(quality, "config", 7);
                 lineChanger(gain, "config", 8);
                 lineChanger(cutOnly, "config", 9);
+                lineChanger(exportSubtitle, "config", 10);
             }
             catch
             {
