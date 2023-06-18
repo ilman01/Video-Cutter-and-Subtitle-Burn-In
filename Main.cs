@@ -359,18 +359,6 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
             process2.WaitForExit();
 
-            if (checkBox3.Checked == true)
-            {
-                try
-                {
-                    File.Copy(@"./ffmpeg/subtitle.srt", textBox2.Text + ".srt", true);
-                }
-                catch
-                {
-
-                }
-            }
-
             progressBar1.Value = 100;
             label6.Text = "Done!";
 
@@ -383,6 +371,20 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 progressBar1.Value = 0;
                 MessageBox.Show("An error has occurred");
                 //MessageBox.Show(_stopwatch.Elapsed.TotalMilliseconds.ToString());
+            }
+            else
+            {
+                if (checkBox3.Checked == true)
+                {
+                    try
+                    {
+                        File.Copy(@"./ffmpeg/subtitle.srt", textBox2.Text + ".srt", true);
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
 
             /*StreamReader streamReader = process.StandardError;
