@@ -74,6 +74,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string gain = File.ReadLines("config").Skip(7).Take(1).First();
             string cutOnly = File.ReadLines("config").Skip(8).Take(1).First();
             string exportSubtitle = File.ReadLines("config").Skip(9).Take(1).First();
+            string subtitleStyleSave = File.ReadLines("config").Skip(10).Take(1).First();
 
             textBox1.Text = fileInput;
             textBox2.Text = fileOutput;
@@ -93,6 +94,10 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             if (exportSubtitle == "True")
             {
                 checkBox3.Checked = true;
+            }
+            if (subtitleStyleSave != "")
+            {
+                subtitleStyle = subtitleStyleSave;
             }
 
             if (fileInput != "")
@@ -526,6 +531,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string gain = textBox7.Text;
             string cutOnly = checkBox2.Checked.ToString();
             string exportSubtitle = checkBox3.Checked.ToString();
+            string subtitleStyleSave = subtitleStyle;
 
             try
             {
@@ -539,6 +545,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 lineChanger(gain, "config", 8);
                 lineChanger(cutOnly, "config", 9);
                 lineChanger(exportSubtitle, "config", 10);
+                lineChanger(subtitleStyleSave, "config", 11);
             }
             catch
             {
