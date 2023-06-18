@@ -365,7 +365,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             currentlyProcessing = false;
 
             _stopwatch.Stop();
-            if (_stopwatch.Elapsed.TotalMilliseconds < 90)
+            if (_stopwatch.Elapsed.TotalMilliseconds < 200)
             {
                 label6.Text = "An error has occurred";
                 progressBar1.Value = 0;
