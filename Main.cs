@@ -21,7 +21,9 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
         public static string defaultSubtitleStyle { get; set; }
         public static string subtitleStyle { get; set; }
-        
+        public static string encoder { get; set; }
+
+
         bool currentlyProcessing;
         bool currentlyDownloading;
         
@@ -37,6 +39,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             System.IO.Directory.CreateDirectory(Application.StartupPath + "/ffmpeg");
             currentlyProcessing = false;
             currentlyDownloading = false;
+            encoder = "libx264";
 
             defaultSubtitleStyle = "Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light";
             subtitleStyle = defaultSubtitleStyle;
@@ -75,6 +78,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string cutOnly = File.ReadLines("config").Skip(8).Take(1).First();
             string exportSubtitle = File.ReadLines("config").Skip(9).Take(1).First();
             string subtitleStyleSave = File.ReadLines("config").Skip(10).Take(1).First();
+            string useEncoder = File.ReadLines("config").Skip(11).Take(1).First();
 
             textBox1.Text = fileInput;
             textBox2.Text = fileOutput;
@@ -105,6 +109,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 axWindowsMediaPlayer1.URL = textBox1.Text;
                 axWindowsMediaPlayer1.Ctlcontrols.stop();
             }
+            encoder = useEncoder;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -298,6 +303,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string gain = textBox7.Text;
             string startTime = textBox4.Text;
             string endTime = textBox5.Text;
+            string useEncoder = encoder;
 
             string argExtractSub = null;
             string argVideoProc = null;
@@ -312,11 +318,11 @@ namespace Video_Cutter_and_Subtitle_Burn_In
 
             if (checkBox2.Checked == true)
             {
-                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -map_chapters -1 -shortest -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" " + outputFile;
+                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -map_chapters -1 -shortest -c:v " + useEncoder + " -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" " + outputFile;
             }
             else
             {
-                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -map_chapters -1 -c:v libx264 -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='" + subtitleStyle + "'\" " + outputFile;
+                argVideoProc = "-y " + "-ss " + startTime + " -to " + endTime + " -i " + inputFile + " -map 0:v -map 0:a -map_chapters -1 -c:v " + useEncoder + " -b:a 320k -ac 2 -qp " + quality + " -filter:a \"volume=" + gain + "dB\" -vf \"subtitles=subtitle.srt:force_style='" + subtitleStyle + "'\" " + outputFile;
             }
             
 
@@ -532,6 +538,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string cutOnly = checkBox2.Checked.ToString();
             string exportSubtitle = checkBox3.Checked.ToString();
             string subtitleStyleSave = subtitleStyle;
+            string useEncoder = encoder;
 
             try
             {
@@ -546,6 +553,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 lineChanger(cutOnly, "config", 9);
                 lineChanger(exportSubtitle, "config", 10);
                 lineChanger(subtitleStyleSave, "config", 11);
+                lineChanger(useEncoder, "config", 12);
             }
             catch
             {

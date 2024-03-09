@@ -437,7 +437,7 @@
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(90, 23);
             this.button13.TabIndex = 31;
-            this.button13.Text = "Change Style";
+            this.button13.Text = "More Options";
             this.button13.UseVisualStyleBackColor = true;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
