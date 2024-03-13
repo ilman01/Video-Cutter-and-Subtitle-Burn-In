@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 
 namespace Video_Cutter_and_Subtitle_Burn_In
@@ -20,6 +21,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         private void Form2_Load(object sender, EventArgs e)
         {
             textBox1.Text = Form1.subtitleStyle;
+            numericUpDown1.Value = decimal.Parse(Form1.subtitleTrack);
             if (Form1.encoder == "h264_nvenc")
             {
                 checkBox1.Checked = true;
@@ -34,6 +36,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         private void button2_Click(object sender, EventArgs e)
         {
             Form1.subtitleStyle = textBox1.Text;
+            Form1.subtitleTrack = numericUpDown1.Value.ToString();
             if (checkBox1.Checked == true)
             {
                 Form1.encoder = "h264_nvenc";

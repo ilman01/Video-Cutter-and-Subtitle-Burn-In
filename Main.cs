@@ -22,6 +22,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
         public static string defaultSubtitleStyle { get; set; }
         public static string subtitleStyle { get; set; }
         public static string encoder { get; set; }
+        public static string subtitleTrack { get; set; }
 
 
         bool currentlyProcessing;
@@ -40,6 +41,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             currentlyProcessing = false;
             currentlyDownloading = false;
             encoder = "libx264";
+            subtitleTrack = "0";
 
             defaultSubtitleStyle = "Fontsize=20,BorderStyle=4,BackColour=&H80000000&,Outline=0,FontName=Bahnschrift Light";
             subtitleStyle = defaultSubtitleStyle;
@@ -79,6 +81,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string exportSubtitle = File.ReadLines("config").Skip(9).Take(1).First();
             string subtitleStyleSave = File.ReadLines("config").Skip(10).Take(1).First();
             string useEncoder = File.ReadLines("config").Skip(11).Take(1).First();
+            string loadSubtitleTrack = File.ReadLines("config").Skip(12).Take(1).First();
 
             textBox1.Text = fileInput;
             textBox2.Text = fileOutput;
@@ -113,6 +116,10 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             if (useEncoder != "")
             {
                 encoder = useEncoder;
+            }
+            if (loadSubtitleTrack != "")
+            {
+                subtitleTrack = loadSubtitleTrack;
             }
         }
 
@@ -308,6 +315,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string startTime = textBox4.Text;
             string endTime = textBox5.Text;
             string useEncoder = encoder;
+            string useSubtitleTrack = subtitleTrack;
 
             string argExtractSub = null;
             string argVideoProc = null;
@@ -317,7 +325,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             }
             else
             {
-                argExtractSub = "-y " + "-i " + inputFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:0 subtitle.srt";
+                argExtractSub = "-y " + "-i " + inputFile + " -ss " + startTime + " -to " + endTime + " -map 0:s:" + useSubtitleTrack + " subtitle.srt";
             }
 
             if (checkBox2.Checked == true)
@@ -543,6 +551,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
             string exportSubtitle = checkBox3.Checked.ToString();
             string subtitleStyleSave = subtitleStyle;
             string useEncoder = encoder;
+            string saveSubtitleTrack = subtitleTrack;
 
             try
             {
@@ -558,6 +567,7 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 lineChanger(exportSubtitle, "config", 10);
                 lineChanger(subtitleStyleSave, "config", 11);
                 lineChanger(useEncoder, "config", 12);
+                lineChanger(saveSubtitleTrack, "config", 13);
             }
             catch
             {
