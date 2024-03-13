@@ -109,7 +109,11 @@ namespace Video_Cutter_and_Subtitle_Burn_In
                 axWindowsMediaPlayer1.URL = textBox1.Text;
                 axWindowsMediaPlayer1.Ctlcontrols.stop();
             }
-            encoder = useEncoder;
+            
+            if (useEncoder != "")
+            {
+                encoder = useEncoder;
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
